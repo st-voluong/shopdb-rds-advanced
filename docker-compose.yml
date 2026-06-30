@@ -1,18 +1,5 @@
+version: '3.8'
 services:
-  mysql-db:
-    image: mysql:8.0
-    container_name: mysql-local-container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: voluongdev_hihihehe
-      MYSQL_DATABASE: shopdb
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks: 
-      - shopdb-vpc-network
-  
   backend-api:
     build: 
       context: ./backend
@@ -20,15 +7,13 @@ services:
     container_name: shopdb-backend-container
     restart: always
     environment:
-      - PORT=5000
-      - DB_USER=root
-      - DB_PASSWORD=voluongdev_hihihehe
-      - DB_NAME=shopdb
-      - DB_PORT=3306
-      - DB_MASTER_HOST=mysql-db
-      - DB_REPLICA_HOST=mysql-db
-    depends_on:
-      - mysql-db
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DB_MASTER_HOST=${DB_MASTER_HOST}
+      - DB_REPLICA_HOST=${DB_REPLICA_HOST}
     networks:
       - shopdb-vpc-network
   
@@ -56,9 +41,6 @@ services:
       - backend-api
     networks:
       - shopdb-vpc-network
-
-volumes:
-  mysql_data:
 
 networks:
   shopdb-vpc-network:
